@@ -2,6 +2,9 @@
 
 Panduan ini akan membantumu setup Husky (v9+) untuk menjalankan `lint`, `prettier`, `commitlint`, `lint-staged`, dan `commitizen` secara otomatis sebelum commit. Cocok untuk project Next.js, React, atau lainnya.
 
+[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](https://commitizen.github.io/cz-cli/)
+![Lint Passed](https://img.shields.io/badge/lint-passed-success?style=flat-square&color=brightgreen)
+
 ---
 
 ## ✨ 1. Install Husky & Inisialisasi
@@ -139,6 +142,58 @@ npm run commit
 
 ---
 
+## ⚙️ Bonus: GitHub Actions untuk ESLint Otomatis
+
+Buat file baru:
+
+```
+.github/workflows/lint.yml
+```
+
+### Isi file `lint.yml`
+
+```yaml
+name: ESLint Check
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main, dev]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run ESLint
+        run: npx eslint . --ext .js,.jsx,.ts,.tsx
+```
+
+### Tambahkan badge ke README:
+
+```md
+![ESLint](https://github.com/[username]/[repo]/actions/workflows/lint.yml/badge.svg)
+```
+
+Contoh:
+
+```md
+![ESLint](https://github.com/novaka-dev/git-workflow/actions/workflows/lint.yml/badge.svg)
+```
+
+---
+
 ## 🎉 Selesai!
 
 Setiap kali kamu:
@@ -153,7 +208,8 @@ Husky akan:
 1. Jalankan `lint-staged` untuk file yang berubah (`pre-commit`)
 2. Validasi pesan commit dengan `commitlint` (`commit-msg`)
 3. Format commit kamu dibantu dengan Commitizen (interaktif)
+4. Otomatis lint dicek setiap push via GitHub Actions
 
 ---
 
-> Ini workflow modern untuk tim dev yang produktif dan konsisten. Bisa kamu simpan sebagai `HUSKY_SETUP.md` atau langsung di README project kamu 🚀
+> Ini workflow modern untuk tim dev yang produktif dan konsisten. Simpan sebagai `HUSKY_SETUP.md` atau langsung di README project kamu 🚀
